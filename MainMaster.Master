@@ -1,0 +1,32 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MainMaster.master.cs" Inherits="PIS_System.MainMaster" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="~/css/Main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/Scripts/jquery-ui-1.12.1/jquery-ui.min.css" />
+    <script src="/Scripts/jquery.js"></script>
+    <script src="/Scripts/jquery-ui-1.12.1/jquery-ui.js"></script>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="logoBox">
+            <img src="Images/logo2.png" alt="logo" class="logo"/>
+            <a href="/PO_List.aspx" class="navbar">進貨單管理</a>
+            <a href="/ProductList.aspx" class="navbar">商品管理</a>
+            <asp:Label ID="lblName" runat="server" Text="Label"></asp:Label>
+            <asp:Button ID="btnLogout" runat="server" Text="登出" OnClick="btnLogout_Click"/>
+        </div>
+        <div class="content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
