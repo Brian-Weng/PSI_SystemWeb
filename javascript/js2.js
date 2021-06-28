@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     //-----初始化彈出視窗的內容-----
     var id, name, price;
+    var total = 0;
     var fun1 = function () {
         var sndtr = $("#tableProduct").find("tr:nth-child(2)");
         sndtr.addClass("highlightRow").siblings().removeClass("highlightRow");
@@ -11,6 +12,12 @@
         $(".unitPrice").val(price);
         $(".txtQty").val(0);
         $(".lblAmount").text(0);
+
+        
+        if ($('#maintable tbody tr').length != 0)
+            $("#divTotal").show();
+
+        total = $('.lblTotal').text().replace(',', '');
     }
     fun1();
     //-----初始化彈出視窗的內容-----
@@ -30,7 +37,8 @@
             datetext = datetext + " " + h + ":" + m;
 
             $(".datepick").val(datetext);
-        }
+        },
+        
     });
     //-----日曆自訂格式-----
 
@@ -79,7 +87,7 @@
     //-----更改數量時同時計算小計-----
 
     //-----將挑選商品內容存入進貨單表-----
-    var total = 0;
+    
     $("#btnInsert").click(function () {
         var markup = "<td>" + id + "</td><td>" + name + "</td><td>" + price + "</td><td>" + qty + "</td><td>" + result + "</td>";
         var hasvalue = $('#maintable tbody tr > td:contains(' + name + ')');
@@ -136,16 +144,17 @@
         }
 
         //Convert the JSON object to string and assign to Hidden Field.
-        var x = JSON.stringify(POdetails);
-        var y = $(".datepick").val();
+        var po = JSON.stringify(POdetails);
+        var dp = $(".datepick").val();
+        var pid = ($('.txtPID').val() == '儲存時產生')? 'create' : $('.txtPID').val();
 
         $.ajax({
             url: "/API/PO_Handler.ashx",
             method: "POST",
             dataType: "JSON",
-            data: {"PO_Detail": x, "ArrivalTime": y}
+            data: {"PO_Detail": po, "PID":pid, "ArrivalTime": dp}
         }).done(function (responseData) {
-            alert("新增成功");
+            alert(responseData);
         });
     });
     //-----新增或修改進貨單到資料庫-----

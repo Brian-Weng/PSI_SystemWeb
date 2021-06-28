@@ -6,7 +6,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h1>進貨單管理</h1>
     <h2 id="h2Title" runat="server"></h2>
-    <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID" Enabled="false"></asp:TextBox></div>
+    <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID" Enabled="false">儲存時產生</asp:TextBox></div>
     <div>到達時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick" AutoCompleteType="Disabled"></asp:TextBox></div>
     <div>
         <button type="button" id="btnEdit">編輯</button>
@@ -38,7 +38,7 @@
     <input type="hidden" name="maintableJSON"/>
     <div id="divTotal" style="display:none;">
         <span style="margin-right:37%;">
-            總計:<asp:Label ID="lblTotal" runat="server" Text="" CssClass="lblTotal"></asp:Label>
+            總計:<asp:Label ID="lblTotal" runat="server" Text="0" CssClass="lblTotal"></asp:Label>
         </span>
     </div>
     <div>

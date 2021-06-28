@@ -205,7 +205,7 @@ namespace PIS_System.Managers
                 $@"
                     SELECT Products.ID, Products.Name, Products.UnitPrice, PO_Details.QTY, PO_Details.Amount
                     FROM Products
-                    LEFT JOIN 
+                    JOIN 
                     (
                     SELECT ID, QTY, Amount
                     FROM PO_Details
