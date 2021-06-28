@@ -1,10 +1,10 @@
 ﻿$(document).ready(function () {
     //-----初始化彈出視窗的內容-----
-    var pid, name, price;
+    var id, name, price;
     var fun1 = function () {
         var sndtr = $("#tableProduct").find("tr:nth-child(2)");
         sndtr.addClass("highlightRow").siblings().removeClass("highlightRow");
-        pid = sndtr.find(".ID").html();
+        id = sndtr.find(".ID").html();
         name = sndtr.find(".Name").html();
         price = sndtr.find(".UnitPrice").html();
         $(".lblProduct").html(name);
@@ -49,7 +49,7 @@
     
     $(".trclass").click(function () {
         $(this).addClass("highlightRow").siblings().removeClass("highlightRow");
-        pid = $(this).find(".ID").html();
+        id = $(this).find(".ID").html();
         name = $(this).find(".Name").html();
         price = $(this).find(".UnitPrice").html();
         $(".lblProduct").html(name);
@@ -65,7 +65,7 @@
         qty = parseInt($(this).val(), 10);
         price = parseInt($(".unitPrice").val(), 10);
         result = qty * price;
-        result = isNaN(result) ? '請輸入數量' : result;
+        result = isNaN(result) ? '請輸入數字' : result;
         $(".lblAmount").text(result);
     });
 
@@ -81,7 +81,7 @@
     //-----將挑選商品內容存入進貨單表-----
     var total = 0;
     $("#btnInsert").click(function () {
-        var markup = "<td>" + pid + "</td><td>" + name + "</td><td>" + price + "</td><td>" + qty + "</td><td>" + result + "</td>";
+        var markup = "<td>" + id + "</td><td>" + name + "</td><td>" + price + "</td><td>" + qty + "</td><td>" + result + "</td>";
         var hasvalue = $('#maintable tbody tr > td:contains(' + name + ')');
         var bool = Boolean(hasvalue.length > 0);
 
@@ -89,15 +89,31 @@
             total -= hasvalue.nextAll().eq(2).html();
             hasvalue.parent().html(markup);
             total += result;
-            $(".txtTotal").text('總計：' + total);
+            $(".lblTotal").text(total);
         } else {
             $("#maintable tbody").append('<tr>' + markup + '</tr>');
             total += result;
-            $(".txtTotal").text('總計：' + total);
+            $(".lblTotal").text(total);
         }
+        $("#divTotal").show();
     });
     //-----將挑選商品內容存入進貨單表-----
 
+    //-----將挑選商品從進貨單表中移除-----
+    $("#btnRemove").click(function () {
+        var matchtd = $('#maintable tbody tr > td:contains(' + name + ')');
+        if (matchtd.length > 0) {
+            total -= matchtd.nextAll().eq(2).html();
+            matchtd.parent('tr').remove();
+            if ($('#maintable tbody tr').length == 0)
+                $("#divTotal").hide();
+            $(".lblTotal").text(total);
+        }
+            
+    });
+    //-----將挑選商品從進貨單表中移除-----
+
+    //-----新增或修改進貨單到資料庫-----
     $(".btnSave").click(function () {
         //Create an Array to hold the Table values.
         var POdetails = new Array();
@@ -132,5 +148,7 @@
             alert("新增成功");
         });
     });
-    
+    //-----新增或修改進貨單到資料庫-----
+
+
 });

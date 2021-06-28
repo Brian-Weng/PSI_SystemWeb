@@ -63,10 +63,10 @@ namespace PIS_System
 
             //讀取到的資料放入畫面中各個控制項中
             this.txtPID.Text = POModel.PID;
-            this.txtDate.Text = POModel.ArrivalTime.ToString();
-            this.txtItems.Text = POModel.Items.ToString();
-            this.txtTotalQty.Text = POModel.QTY.ToString();
-            this.txtTotalAmount.Text = POModel.Total.ToString("#,0");
+            this.txtDate.Text = POModel.ArrivalTime.ToString("yyyy/MM/dd HH:mm");
+            //this.txtItems.Text = POModel.Items.ToString();
+            //this.txtTotalQty.Text = POModel.QTY.ToString();
+            this.lblTotal.Text = POModel.Total.ToString("#,0");
 
             var viewDetailsList = _po_Manager.GetViewPODetails(PID);
             this.repViewPODetail.DataSource = viewDetailsList;

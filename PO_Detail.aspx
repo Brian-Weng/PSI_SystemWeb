@@ -7,10 +7,7 @@
     <h1>進貨單管理</h1>
     <h2 id="h2Title" runat="server"></h2>
     <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID" Enabled="false"></asp:TextBox></div>
-    <div>到達時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick"></asp:TextBox></div>
-    <div>貨物種類：<asp:TextBox ID="txtItems" runat="server" CssClass="txtItems" Enabled="false"></asp:TextBox></div>
-    <div>進貨數量：<asp:TextBox ID="txtTotalQty" runat="server" CssClass="txtTotalQty" Enabled="false"></asp:TextBox></div>
-    <div>進貨金額：<asp:TextBox ID="txtTotalAmount" runat="server" CssClass="txtTotalAmount" Enabled="false"></asp:TextBox></div>
+    <div>到達時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick" AutoCompleteType="Disabled"></asp:TextBox></div>
     <div>
         <button type="button" id="btnEdit">編輯</button>
     </div>
@@ -39,8 +36,10 @@
         </tbody>
     </table>
     <input type="hidden" name="maintableJSON"/>
-    <div>
-        <asp:Label ID="lblTotal" runat="server" Text="" CssClass="lblTotal"></asp:Label>
+    <div id="divTotal" style="display:none;">
+        <span style="margin-right:37%;">
+            總計:<asp:Label ID="lblTotal" runat="server" Text="" CssClass="lblTotal"></asp:Label>
+        </span>
     </div>
     <div>
         <asp:Label ID="lblCreator" runat="server" Text="建立者"></asp:Label><asp:Label ID="lblCreateDate" runat="server" Text="建立時間"></asp:Label>
@@ -55,8 +54,6 @@
     <div>
         <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
     </div>
-    <button type="button" class="testbtn">test</button>
-    <input id="textbox1" type="text" />
 
 
     <div id="dialog" style="display:none;">
@@ -83,6 +80,7 @@
         <div><input type="hidden" class="unitPrice"/></div>
         <div>
             <button type="button" id="btnInsert">加入</button>
+            <button type="button" id="btnRemove" class="btnRemove">移除</button>
         </div>
     </div>
 </asp:Content>

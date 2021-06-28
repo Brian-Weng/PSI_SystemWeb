@@ -117,3 +117,7 @@ h1{
 .highlightRow {
     background-color: #cccccc !important;
 }
+
+.btnRemove{
+    margin-left:50px;
+}
