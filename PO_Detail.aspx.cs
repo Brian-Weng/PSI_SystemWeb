@@ -12,18 +12,66 @@ namespace PIS_System
 {
     public partial class PO_Detail : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        private bool _isInsertMode = false;
+        private string _queryStr = string.Empty;
+        private PO_Manager _po_Manager = new PO_Manager();
+        protected void Page_Init(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            IsInsertMode();
+
+            var manager = new ProductManager();
+            var list = manager.GetProducts();
+            this.repProduct.DataSource = list;
+            this.repProduct.DataBind();
+
+            if (_isInsertMode)
             {
-                var manager = new ProductManager();
-                var list = manager.GetProducts();
-                this.repProduct.DataSource = list;
-                this.repProduct.DataBind();
+                this.h2Title.InnerText = "新增進貨單";
+            }
+            else
+            {
+                this.h2Title.InnerText = "修改進貨單";
+                this.LoadPOAndViewDetail(_queryStr);
             }
            
         }
 
+        private void IsInsertMode()
+        {
+            string queryStr = Request.QueryString["PID"] as string;
+            if (string.IsNullOrEmpty(queryStr))
+            {
+                _isInsertMode = true;
+                return;
+            }
+            else
+            {
+                _isInsertMode = false;
+                _queryStr = queryStr;
+            }
+
+        }
+
+        private void LoadPOAndViewDetail(string PID)
+        {
+            //讀取資料並放入資料model
+            var POModel = _po_Manager.ReadPO(PID);
+
+            //如果讀取不到資料，回到發票總覽頁面
+            if (POModel == null)
+                Response.Redirect("~/PO_List.aspx");
+
+            //讀取到的資料放入畫面中各個控制項中
+            this.txtPID.Text = POModel.PID;
+            this.txtDate.Text = POModel.ArrivalTime.ToString();
+            this.txtItems.Text = POModel.Items.ToString();
+            this.txtTotalQty.Text = POModel.QTY.ToString();
+            this.txtTotalAmount.Text = POModel.Total.ToString("#,0");
+
+            var viewDetailsList = _po_Manager.GetViewPODetails(PID);
+            this.repViewPODetail.DataSource = viewDetailsList;
+            this.repViewPODetail.DataBind();
+        }
         protected void btnSave_Click(object sender, EventArgs e)
         {
             

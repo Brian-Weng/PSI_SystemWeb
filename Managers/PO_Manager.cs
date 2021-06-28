@@ -86,7 +86,7 @@ namespace PIS_System.Managers
             this.ExecuteNonQuery(dbCommandText, parameters);
         }
 
-        public void DeletePO(PO_Model model)
+        public void DeletePO(string pid)
         {
 
         }
@@ -107,7 +107,7 @@ namespace PIS_System.Managers
         public List<PO_Model> ReadPOs(out int totalSize, int currentPage = 1, int pageSize = 5)
         {
             string dbQuery =
-                $@"SELECT TOP {2} * FROM 
+                $@"SELECT TOP {5} * FROM 
                    (
                       SELECT
                         ROW_NUMBER() OVER(ORDER BY PID DESC) AS RowNumber,
@@ -160,14 +160,14 @@ namespace PIS_System.Managers
             return list;
         }
 
-        public PO_Model ReadPO(string Pid)
+        public PO_Model ReadPO(string pid)
         {
             string dbQuery =
                 @"SELECT * FROM PurchaseOrders
                   WHERE PID = @PID AND Deleter IS NULL";
 
             List<SqlParameter> dbParameters = new List<SqlParameter>();
-            dbParameters.Add(new SqlParameter("@PID", Pid));
+            dbParameters.Add(new SqlParameter("@PID", pid));
 
             var dt = this.GetDataTable(dbQuery, dbParameters);
 
@@ -180,8 +180,8 @@ namespace PIS_System.Managers
             model.Total = (decimal)dt.Rows[0]["Total"];
             model.CreateDate = (DateTime)dt.Rows[0]["CreateDate"];
             model.Creator = (string)dt.Rows[0]["Creator"];
-            model.ModifyDate = (DateTime)dt.Rows[0]["ModifyDate"];
-            model.Modifier = (string)dt.Rows[0]["Modifier"];
+            model.ModifyDate = dt.Rows[0].Field<DateTime?>("ModifyDate");
+            model.Modifier = dt.Rows[0]["Modifier"] as string;
 
             return model;
         }

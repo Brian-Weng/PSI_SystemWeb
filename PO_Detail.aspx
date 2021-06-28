@@ -1,13 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MainMaster.Master" AutoEventWireup="true" CodeBehind="PO_Detail.aspx.cs" Inherits="PIS_System.PO_Detail" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    
-    
+    <script src="javascript/js2.js"></script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h1>進貨單管理</h1>
+    <h2 id="h2Title" runat="server"></h2>
     <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID" Enabled="false"></asp:TextBox></div>
-    <div>進貨時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick"></asp:TextBox></div>
+    <div>到達時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick"></asp:TextBox></div>
+    <div>貨物種類：<asp:TextBox ID="txtItems" runat="server" CssClass="txtItems" Enabled="false"></asp:TextBox></div>
+    <div>進貨數量：<asp:TextBox ID="txtTotalQty" runat="server" CssClass="txtTotalQty" Enabled="false"></asp:TextBox></div>
+    <div>進貨金額：<asp:TextBox ID="txtTotalAmount" runat="server" CssClass="txtTotalAmount" Enabled="false"></asp:TextBox></div>
     <div>
         <button type="button" id="btnEdit">編輯</button>
     </div>
@@ -25,19 +28,19 @@
             <asp:Repeater ID="repViewPODetail" runat="server">
                 <ItemTemplate>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td><%# Eval("ID") %></td>
+                        <td><%# Eval("Name") %></td>
+                        <td><%# Eval("UnitPrice") %></td>
+                        <td><%# Eval("Qty") %></td>
+                        <td><%# Eval("Amount") %></td>
                     </tr>
                 </ItemTemplate>
             </asp:Repeater>
         </tbody>
     </table>
-    <input type="text" name="maintableJSON"/>
+    <input type="hidden" name="maintableJSON"/>
     <div>
-        <asp:Label ID="txtTotal" runat="server" Text="" CssClass="txtTotal"></asp:Label>
+        <asp:Label ID="lblTotal" runat="server" Text="" CssClass="lblTotal"></asp:Label>
     </div>
     <div>
         <asp:Label ID="lblCreator" runat="server" Text="建立者"></asp:Label><asp:Label ID="lblCreateDate" runat="server" Text="建立時間"></asp:Label>
@@ -82,41 +85,4 @@
             <button type="button" id="btnInsert">加入</button>
         </div>
     </div>
-    <script src="javascript/js2.js"></script>
-    <script>
-        function GetTableValuess() {
-
-            if ($(".txtPID").val() != "") {
-                alert(123);
-                //Create an Array to hold the Table values.
-                var POdetails = new Array();
-
-                //Reference the Table.
-                var table = document.getElementById("maintable");
-
-                //Loop through Table Rows.
-                for (var i = 1; i < table.rows.length; i++) {
-                    //Reference the Table Row.
-                    var row = table.rows[i];
-
-                    //Copy values from Table Cell to JSON object.
-                    var POdetail = {};
-                    POdetail.PID = $(".txtPID").val();
-                    POdetail.ID = row.cells[0].innerHTML;
-                    POdetail.QTY = row.cells[3].innerHTML;
-                    POdetail.Amount = row.cells[4].innerHTML;
-                    POdetails.push(POdetail);
-                }
-
-                //Convert the JSON object to string and assign to Hidden Field.
-                var x = JSON.stringify(POdetails);
-                document.getElementsByName("maintableJSON")[0].value = x;
-                return true;
-                
-            }
-            else {
-                return false;
-            }
-        }
-    </script>
 </asp:Content>

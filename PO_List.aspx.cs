@@ -13,7 +13,7 @@ namespace PIS_System
 {
     public partial class PO_List : System.Web.UI.Page
     {
-        private const int _pageSize = 2;
+        private const int _pageSize = 5;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -68,7 +68,21 @@ namespace PIS_System
 
         protected void repList_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
+            string cmdName = e.CommandName;
+            string arg = e.CommandArgument.ToString();
+            var manager = new PO_Manager();
 
+            if (cmdName == "DeleteItem")
+            {
+                manager.DeletePO(arg);
+                this.LoadRepeater();
+            }
+
+            if (cmdName == "UpdateItem")
+            {
+                string targetUrl = "~/PO_Detail.aspx?PID=" + arg;
+                Response.Redirect(targetUrl);
+            }
         }
     }
 }
