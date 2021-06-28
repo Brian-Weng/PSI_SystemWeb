@@ -1,4 +1,5 @@
 ﻿using PIS_System.Models;
+using PIS_System.VIewModels;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -42,7 +43,7 @@ namespace PIS_System.Managers
             this.ExecuteNonQuery(dbCommandText, parameters);
         }
 
-        public void UpdatePO(PO_Model model)
+        public void UpdatePO(PO_Model model, DataTable dt)
         {
             string dbCommandText =
                 $@" UPDATE PurchaseOrders
@@ -196,6 +197,45 @@ namespace PIS_System.Managers
             var dt = this.GetDataTable(dbQuery, dbParameters);
             string PID = dt.Rows[0].Field<string>("PID");
             return PID;
+        }
+
+        public List<PODetailViewModel> GetViewPODetails(string pid)
+        {
+            string dbQuery =
+                $@"
+                    SELECT Products.ID, Products.Name, Products.UnitPrice, PO_Details.QTY, PO_Details.Amount
+                    FROM Products
+                    LEFT JOIN 
+                    (
+                    SELECT ID, QTY, Amount
+                    FROM PO_Details
+                    WHERE PO_Details.PID = @Pid
+                    )AS PO_Details
+                    ON Products.ID = PO_Details.ID
+                  ";
+
+            List<SqlParameter> dbParameters = new List<SqlParameter>() 
+            { 
+                new SqlParameter("@Pid", pid)
+            };
+
+            var dt = this.GetDataTable(dbQuery, dbParameters);
+
+            List<PODetailViewModel> list = new List<PODetailViewModel>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                PODetailViewModel model = new PODetailViewModel();
+                model.ID = (string)dr["ID"];
+                model.Name = (string)dr["Name"];
+                model.UnitPrice = (decimal)dr["UnitPrice"];
+                model.Qty = dr.Field<int?>("QTY");
+                model.Amount = dr.Field<decimal?>("Amount");
+
+                list.Add(model);
+            }
+
+            return list;
         }
     }
 }

@@ -6,14 +6,14 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h1>進貨單管理</h1>
-    <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID"></asp:TextBox></div>
+    <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID" Enabled="false"></asp:TextBox></div>
     <div>進貨時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick"></asp:TextBox></div>
     <div>
         <button type="button" id="btnEdit">編輯</button>
     </div>
     <table class="table" id="maintable">
         <thead>
-                <tr>
+            <tr>
                 <th>商品編號</th>
                 <th>商品名稱</th>
                 <th>單價</th>
@@ -22,7 +22,17 @@
             </tr>
         </thead>
         <tbody>
-
+            <asp:Repeater ID="repViewPODetail" runat="server">
+                <ItemTemplate>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </ItemTemplate>
+            </asp:Repeater>
         </tbody>
     </table>
     <input type="text" name="maintableJSON"/>
@@ -36,7 +46,7 @@
         <asp:Label ID="lblModifier" runat="server" Text="修改者"></asp:Label><asp:Label ID="lblModifyDate" runat="server" Text="修改時間"></asp:Label>
     </div>
     <div>
-        <asp:Button ID="btnSave" runat="server" Text="儲存" CssClass="btnSave" OnClick="btnSave_Click"/>
+        <button type="button" class="btnSave">儲存</button>
         <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click"/>
     </div>
     <div>
