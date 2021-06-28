@@ -67,19 +67,9 @@ namespace PIS_System.Managers
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(dbCommand, connection);
-                List<SqlParameter> parameters2 = new List<SqlParameter>();
-                foreach (var item in parameters)
-                {
-                    if (item.TypeName != "")
-                    {
-                        SqlParameter dtParam = new SqlParameter(item.ParameterName, item.Value);
-                        dtParam.TypeName = "dbo.PO_DetailsTableType";
-                        parameters2.Add(dtParam);
-                        continue;
-                    }
-                    parameters2.Add(new SqlParameter(item.ParameterName, item.Value));
-                }
-                command.Parameters.AddRange(parameters2.ToArray());
+
+                var newParameter = parameters.Select(c => ((ICloneable)c).Clone());
+                command.Parameters.AddRange(newParameter.ToArray());
 
                 connection.Open();
                 SqlTransaction sqlTransaction = connection.BeginTransaction();

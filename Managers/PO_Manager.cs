@@ -44,7 +44,45 @@ namespace PIS_System.Managers
 
         public void UpdatePO(PO_Model model)
         {
+            string dbCommandText =
+                $@" UPDATE PurchaseOrders
+                    SET Items = @Items, 
+                        QTY = @QTY, 
+                        ArrivalTime = @ArrivalTime, 
+                        Total = @Total, 
+                        ModifyDate = @ModifyDate,
+                        Modifier = @Modifier
+                    WHERE PID = @PID;
+                    
+                    WITH PO_DetailsT AS (SELECT * FROM PO_Details WHERE PID = @PID)
+                    MERGE INTO PO_DetailsT [bt]
+                    USING @tvpPO_Details [ut]
+                    ON [bt].PID = [ut].PID AND [bt].ID = [ut].ID
+                        WHEN MATCHED
+                        THEN UPDATE SET QTY = [ut].QTY, Amount = [ut].Amount
+                        WHEN NOT MATCHED
+                        THEN INSERT VALUES ([ut].PID, [ut].ID, [ut].QTY, [ut].Amount)
+                        WHEN NOT MATCHED BY SOURCE
+                        THEN DELETE;
+                ";
 
+            List<SqlParameter> parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("@PID", model.PID),
+                new SqlParameter("@Items", model.Items),
+                new SqlParameter("@QTY", model.QTY),
+                new SqlParameter("@ArrivalTime", model.ArrivalTime),
+                new SqlParameter("@Total", model.Total),
+                new SqlParameter("@ModifyDate", model.ModifyDate),
+                new SqlParameter("@Modifier", model.Modifier),
+            };
+
+            SqlParameter dtParam = new SqlParameter("@tvpPO_Details", dt);
+            dtParam.SqlDbType = SqlDbType.Structured;
+            dtParam.TypeName = "dbo.PO_DetailsTableType";
+            parameters.Add(dtParam);
+
+            this.ExecuteNonQuery(dbCommandText, parameters);
         }
 
         public void DeletePO(PO_Model model)
