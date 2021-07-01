@@ -90,6 +90,11 @@
     //-----將挑選商品內容存入進貨單表-----
     
     $("#btnInsert").click(function () {
+        if (qty == undefined || qty == 0) {
+            alert('請輸入數量');
+            return;
+        }
+            
         var markup = "<td>" + id + "</td><td>" + name + "</td><td>" + price + "</td><td>" + qty + "</td><td>" + result + "</td>";
         var hasvalue = $('#maintable tbody tr > td:contains(' + name + ')');
         var bool = Boolean(hasvalue.length > 0);
@@ -107,6 +112,7 @@
             $(".lblTotal").text(num);
         }
         $("#divTotal").show();
+        sortTable();
     });
     //-----將挑選商品內容存入進貨單表-----
 
@@ -120,6 +126,7 @@
                 $("#divTotal").hide();
             var num = thousands(total);
             $(".lblTotal").text(num);
+            qty = 0;
         }
             
     });
@@ -174,6 +181,9 @@
                     $(".lblCreateDate").text("建立時間" + formatCreDate);
                     $("#divCreate").show();
                     alert('新增成功');
+                    //$(".btnSave").hide();
+                    $(".btnSave").remove();
+                    $(".btnCancel").val('回總覽頁');
                 } else {
                     var resModifier = JSON.stringify(responseData.Modifier);
                     var resModifyDate = JSON.stringify(responseData.ModifyDate);
@@ -197,7 +207,37 @@
     });
     //-----新增或修改進貨單到資料庫-----
 
+    //-----數字加上千分位符號-----
     function thousands(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+    //-----數字加上千分位符號-----
+
+    //-----排序表格-----
+    function sortTable() {
+        var rows = $('#maintable tbody  tr').get();
+
+        rows.sort(function (a, b) {
+
+            var A = $(a).children('td').eq(0).text().toUpperCase();
+            var B = $(b).children('td').eq(0).text().toUpperCase();
+
+            if (A < B) {
+                return -1;
+            }
+
+            if (A > B) {
+                return 1;
+            }
+
+            return 0;
+
+        });
+
+        $.each(rows, function (index, row) {
+            $('#maintable').children('tbody').append(row);
+        });
+    }
+    //-----排序表格-----
+
 });

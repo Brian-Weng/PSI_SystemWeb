@@ -8,7 +8,7 @@
     <h2 id="h2Title" runat="server"></h2>
     <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID" Enabled="false">儲存時產生</asp:TextBox></div>
     <div>到達時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick" AutoCompleteType="Disabled"></asp:TextBox></div>
-    <div style="margin-top:20px">
+    <div id="divEdit" style="margin:20px 0px 3px;">
         <button type="button" id="btnEdit">編輯</button>
     </div>
     <table class="table" id="maintable">
@@ -43,19 +43,15 @@
     </div>
     <div id="divCreate" style="display:none;"  runat="server">
         <asp:Label ID="lblCreator" runat="server" Text="建立者" CssClass="lblCreator">
-
         </asp:Label><asp:Label ID="lblCreateDate" runat="server" Text="建立時間" CssClass="lblCreateDate"></asp:Label>
     </div>
     <div id="divModify" style="display:none;">
         <asp:Label ID="lblModifier" runat="server" Text="修改者" CssClass="lblModifier">
         </asp:Label><asp:Label ID="lblModifyDate" runat="server" Text="修改時間" CssClass="lblModifyDate"></asp:Label>
     </div>
-    <div>
+    <div id="divSave" style="margin-top:30px">
         <button type="button" class="btnSave">儲存</button>
-        <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click"/>
-    </div>
-    <div>
-        <asp:Label ID="lblMsg" runat="server" Text=""></asp:Label>
+        <asp:Button ID="btnCancel" runat="server" Text="取消" CssClass="btnCancel" OnClick="btnCancel_Click"/>
     </div>
 
 

@@ -77,14 +77,14 @@ namespace PIS_System
         }
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            
-            
+
 
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-
+            Response.Redirect("~/PO_List.aspx");
         }
+
     }
 }
