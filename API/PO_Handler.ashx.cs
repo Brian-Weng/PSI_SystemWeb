@@ -22,8 +22,6 @@ namespace PIS_System.API
             var manager = new PO_Manager();
             var model = new PO_Model();
 
-            //context.Response.ContentType = "text/plain";
-            //context.Response.Write("Hello World");
             string date = context.Request.Form["ArrivalTime"];
             string pid = context.Request.Form["PID"];
             string tableJSON = context.Request.Form["PO_Detail"];
@@ -58,6 +56,12 @@ namespace PIS_System.API
                 model.Creator = (string)currentUser.Name;
 
                 manager.CreatePO(model, dt);
+
+                string responseData = JsonConvert.SerializeObject(model);
+
+                context.Response.ContentType = "application/json";
+                context.Response.Charset = "utf-8";
+                context.Response.Write(responseData);
             }
             else
             {
@@ -85,9 +89,14 @@ namespace PIS_System.API
                 model.Modifier = (string)currentUser.Name;
 
                 manager.UpdatePO(model, dt);
+
+                string responseData = JsonConvert.SerializeObject(model);
+
+                context.Response.ContentType = "application/json";
+                context.Response.Charset = "utf-8";
+                context.Response.Write(responseData);
             }
 
-            
         }
 
         public bool IsReusable

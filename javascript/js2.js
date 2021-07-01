@@ -17,7 +17,8 @@
         if ($('#maintable tbody tr').length != 0)
             $("#divTotal").show();
 
-        total = $('.lblTotal').text().replace(',', '');
+        var num = $('.lblTotal').text().replace(',', '');
+        total = parseInt(num, 10);
     }
     fun1();
     //-----初始化彈出視窗的內容-----
@@ -97,11 +98,13 @@
             total -= hasvalue.nextAll().eq(2).html();
             hasvalue.parent().html(markup);
             total += result;
-            $(".lblTotal").text(total);
+            var num = thousands(total);
+            $(".lblTotal").text(num);
         } else {
             $("#maintable tbody").append('<tr>' + markup + '</tr>');
             total += result;
-            $(".lblTotal").text(total);
+            var num = thousands(total);
+            $(".lblTotal").text(num);
         }
         $("#divTotal").show();
     });
@@ -115,7 +118,8 @@
             matchtd.parent('tr').remove();
             if ($('#maintable tbody tr').length == 0)
                 $("#divTotal").hide();
-            $(".lblTotal").text(total);
+            var num = thousands(total);
+            $(".lblTotal").text(num);
         }
             
     });
@@ -150,14 +154,50 @@
 
         $.ajax({
             url: "/API/PO_Handler.ashx",
-            method: "POST",
-            dataType: "JSON",
+            type: "POST",
+            dataType: "json",
             data: {"PO_Detail": po, "PID":pid, "ArrivalTime": dp}
-        }).done(function (responseData) {
-            alert(responseData);
-        });
+        })
+            .done(function (responseData) {
+                console.log(responseData);
+                var resPid = JSON.stringify(responseData.PID);
+                var resCreator = JSON.stringify(responseData.Creator);
+                var resCreateDate = JSON.stringify(responseData.CreateDate);
+
+                if (resModifier == null) {
+                    var formatPid = resPid.replace(/\"/g, '');
+                    var formatCreator = resCreator.replace(/\"/g, '');
+                    var formatCreDate = resCreateDate.slice(1, 20).replace('T', ' ');
+
+                    $(".txtPID").val(formatPid);
+                    $(".lblCreator").text("建立者" + formatCreator);
+                    $(".lblCreateDate").text("建立時間" + formatCreDate);
+                    $("#divCreate").show();
+                    alert('新增成功');
+                } else {
+                    var resModifier = JSON.stringify(responseData.Modifier);
+                    var resModifyDate = JSON.stringify(responseData.ModifyDate);
+
+                    var formatModifier = resModifier.replace(/\"/g, '');
+                    var formatModDate = resModifyDate.slice(1, 20).replace('T', ' ');
+
+                    $(".lblModifier").text("建立者" + formatModifier);
+                    $(".lblModifyDate").text("建立時間" + formatModDate);
+                    $("#divModify").show();
+                    alert('更新成功');
+                }
+
+            })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("傳輸失敗");
+                console.log('Error: ' + errorThrown);
+                console.log('Status: ' + status);
+                console.dir(xhr);
+            })
     });
     //-----新增或修改進貨單到資料庫-----
 
-
+    function thousands(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 });

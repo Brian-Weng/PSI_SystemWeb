@@ -22,8 +22,14 @@ namespace PIS_System.Managers
                 {
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
-                    DataTable dt = new DataTable();
-                    dt.Load(reader);
+                    
+                    DataTable dt = null;
+                    if(reader.HasRows)
+                    {
+                        dt = new DataTable();
+                        dt.Load(reader);
+                    }
+
                     reader.Close();
                     return dt;
                 }

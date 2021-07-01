@@ -74,7 +74,9 @@ namespace PIS_System
 
             if (cmdName == "DeleteItem")
             {
-                manager.DeletePO(arg);
+                var currentUser = LoginHelper.GetCurrentUserInfo();
+                string userName = currentUser.Name;
+                manager.DeletePO(arg, userName);
                 this.LoadRepeater();
             }
 

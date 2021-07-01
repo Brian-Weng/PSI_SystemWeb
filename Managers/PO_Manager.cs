@@ -86,9 +86,22 @@ namespace PIS_System.Managers
             this.ExecuteNonQuery(dbCommandText, parameters);
         }
 
-        public void DeletePO(string pid)
+        public void DeletePO(string pid, string userName)
         {
+            string dbCommandText =
+                @"UPDATE PurchaseOrders
+                  SET Deleter = @Deleter,
+                      DeleteDate = @DeleteDate
+                      WHERE PID = @PID";
 
+            List<SqlParameter> parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("@PID", pid),
+                new SqlParameter("@DeleteDate", DateTime.Now),
+                new SqlParameter("@Deleter", userName),
+            };
+
+            this.ExecuteNonQuery(dbCommandText, parameters);
         }
 
         public DataTable GetPOTable()
@@ -169,21 +182,27 @@ namespace PIS_System.Managers
             List<SqlParameter> dbParameters = new List<SqlParameter>();
             dbParameters.Add(new SqlParameter("@PID", pid));
 
-            var dt = this.GetDataTable(dbQuery, dbParameters);
+            DataTable dt = this.GetDataTable(dbQuery, dbParameters);
 
-            PO_Model model = new PO_Model();
+            PO_Model model = null;
 
-            model.PID = (string)dt.Rows[0]["PID"];
-            model.Items = (int)dt.Rows[0]["Items"];
-            model.QTY = (int)dt.Rows[0]["QTY"];
-            model.ArrivalTime = (DateTime)dt.Rows[0]["ArrivalTime"];
-            model.Total = (decimal)dt.Rows[0]["Total"];
-            model.CreateDate = (DateTime)dt.Rows[0]["CreateDate"];
-            model.Creator = (string)dt.Rows[0]["Creator"];
-            model.ModifyDate = dt.Rows[0].Field<DateTime?>("ModifyDate");
-            model.Modifier = dt.Rows[0]["Modifier"] as string;
+            if (dt != null)
+            {
+                model = new PO_Model();
+
+                model.PID = (string)dt.Rows[0]["PID"];
+                model.Items = (int)dt.Rows[0]["Items"];
+                model.QTY = (int)dt.Rows[0]["QTY"];
+                model.ArrivalTime = (DateTime)dt.Rows[0]["ArrivalTime"];
+                model.Total = (decimal)dt.Rows[0]["Total"];
+                model.CreateDate = (DateTime)dt.Rows[0]["CreateDate"];
+                model.Creator = (string)dt.Rows[0]["Creator"];
+                model.ModifyDate = dt.Rows[0].Field<DateTime?>("ModifyDate");
+                model.Modifier = dt.Rows[0]["Modifier"] as string;
+            }
 
             return model;
+            
         }
 
         public string GetNewPID()

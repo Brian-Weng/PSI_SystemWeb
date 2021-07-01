@@ -8,7 +8,7 @@
     <h2 id="h2Title" runat="server"></h2>
     <div>單據編號：<asp:TextBox ID="txtPID" runat="server" CssClass="txtPID" Enabled="false">儲存時產生</asp:TextBox></div>
     <div>到達時間：<asp:TextBox ID="txtDate" runat="server" CssClass="datepick" AutoCompleteType="Disabled"></asp:TextBox></div>
-    <div>
+    <div style="margin-top:20px">
         <button type="button" id="btnEdit">編輯</button>
     </div>
     <table class="table" id="maintable">
@@ -37,15 +37,18 @@
     </table>
     <input type="hidden" name="maintableJSON"/>
     <div id="divTotal" style="display:none;">
-        <span style="margin-right:37%;">
+        <span style="margin-left:37%;">
             總計:<asp:Label ID="lblTotal" runat="server" Text="0" CssClass="lblTotal"></asp:Label>
         </span>
     </div>
-    <div>
-        <asp:Label ID="lblCreator" runat="server" Text="建立者"></asp:Label><asp:Label ID="lblCreateDate" runat="server" Text="建立時間"></asp:Label>
+    <div id="divCreate" style="display:none;"  runat="server">
+        <asp:Label ID="lblCreator" runat="server" Text="建立者" CssClass="lblCreator">
+
+        </asp:Label><asp:Label ID="lblCreateDate" runat="server" Text="建立時間" CssClass="lblCreateDate"></asp:Label>
     </div>
-    <div>
-        <asp:Label ID="lblModifier" runat="server" Text="修改者"></asp:Label><asp:Label ID="lblModifyDate" runat="server" Text="修改時間"></asp:Label>
+    <div id="divModify" style="display:none;">
+        <asp:Label ID="lblModifier" runat="server" Text="修改者" CssClass="lblModifier">
+        </asp:Label><asp:Label ID="lblModifyDate" runat="server" Text="修改時間" CssClass="lblModifyDate"></asp:Label>
     </div>
     <div>
         <button type="button" class="btnSave">儲存</button>
