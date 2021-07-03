@@ -47,6 +47,8 @@
     $("#btnEdit").click(function () {
         $("#dialog").dialog({
             width: 350,
+            modal: true,
+            
             close: function (event, ui) {
                 fun1();
             }
@@ -69,15 +71,23 @@
     //-----點選表格列時將商品名稱等等值存入控制項-----
 
     //-----更改數量時同時計算小計-----
-    var qty, price, result;
+    var price, result;
     $(".txtQty").keyup(function () {
+        $(this).val($(this).val().replace('.', ''));
         qty = parseInt($(this).val(), 10);
+        if (qty < 0 || qty > 101) {
+            alert('數量範圍須在1~100之間');
+            $(this).val('');
+            $(".lblAmount").text('');
+            return;
+        }
+
         price = parseInt($(".unitPrice").val(), 10);
         result = qty * price;
         result = isNaN(result) ? '請輸入數字' : result;
         $(".lblAmount").text(result);
     });
-
+    Math
     $(".txtQty").mouseup(function () {
         qty = parseInt($(this).val(), 10);
         price = parseInt($(".unitPrice").val(), 10);
@@ -90,11 +100,19 @@
     //-----將挑選商品內容存入進貨單表-----
     
     $("#btnInsert").click(function () {
-        if (qty == undefined || qty == 0) {
+        qty = parseInt($(".txtQty").val(), 10);
+        if (isNaN(qty) || qty == 0) {
             alert('請輸入數量');
             return;
         }
-            
+        if (qty < 0 || qty > 101) {
+            alert('數量範圍須在1~99之間');
+            return;
+        }
+        if (Math.floor(qty) != qty && $.isNumeric(id)) {
+            alert('請輸入整數');
+        }
+
         var markup = "<td>" + id + "</td><td>" + name + "</td><td>" + price + "</td><td>" + qty + "</td><td>" + result + "</td>";
         var hasvalue = $('#maintable tbody tr > td:contains(' + name + ')');
         var bool = Boolean(hasvalue.length > 0);
@@ -102,15 +120,14 @@
         if (bool) {
             total -= hasvalue.nextAll().eq(2).html();
             hasvalue.parent().html(markup);
-            total += result;
-            var num = thousands(total);
-            $(".lblTotal").text(num);
         } else {
             $("#maintable tbody").append('<tr>' + markup + '</tr>');
-            total += result;
-            var num = thousands(total);
-            $(".lblTotal").text(num);
         }
+        total += result;
+        var num = thousands(total);
+        $(".lblTotal").text(num);
+
+        $("#divHint").hide();
         $("#divTotal").show();
         sortTable();
     });
@@ -122,11 +139,13 @@
         if (matchtd.length > 0) {
             total -= matchtd.nextAll().eq(2).html();
             matchtd.parent('tr').remove();
-            if ($('#maintable tbody tr').length == 0)
+            if ($('#maintable tbody tr').length == 0) {
+                $("#divHint").show();
                 $("#divTotal").hide();
+            }
+                
             var num = thousands(total);
             $(".lblTotal").text(num);
-            qty = 0;
         }
             
     });
