@@ -52,4 +52,24 @@
         result = isNaN(result) ? '請輸入數量' : result;
         $(".lblAmount").text(result);
     });
+
+    //Create an Array to hold the Table values.
+    var POdetails = new Array();
+
+    //Reference the Table.
+    var table = document.getElementById("maintable");
+
+    //Loop through Table Rows.
+    for (var i = 1; i < table.rows.length; i++) {
+        //Reference the Table Row.
+        var row = table.rows[i];
+
+        //Copy values from Table Cell to JSON object.
+        var POdetail = {};
+
+        POdetail.ID = row.cells[0].innerHTML;
+        POdetail.QTY = row.cells[3].innerHTML;
+        POdetail.Amount = row.cells[4].innerHTML;
+        POdetails.push(POdetail);
+    }
 });

@@ -1,27 +1,31 @@
 ﻿$(document).ready(function () {
-    //-----初始化彈出視窗的內容-----
+    //-----初始化-----
     var id, name, price;
     var total = 0;
+    const urlParams = new URLSearchParams(window.location.search);
+    const pidQueryStr = urlParams.get('PID');
     var fun1 = function () {
-        var sndtr = $("#tableProduct").find("tr:nth-child(2)");
-        sndtr.addClass("highlightRow").siblings().removeClass("highlightRow");
-        id = sndtr.find(".ID").html();
-        name = sndtr.find(".Name").html();
-        price = sndtr.find(".UnitPrice").html();
+        var secondTr = $("#tableProduct").find("tr:nth-child(2)");
+        secondTr.addClass("highlightRow").siblings().removeClass("highlightRow");
+        id = secondTr.find(".ID").html();
+        name = secondTr.find(".Name").html();
+        price = secondTr.find(".UnitPrice").html();
         $(".lblProduct").html(name);
         $(".unitPrice").val(price);
         $(".txtQty").val(0);
         $(".lblAmount").text(0);
 
         
-        if ($('#maintable tbody tr').length != 0)
+        if ($('#maintable tbody tr').length != 0) {
+            $("#divHint").hide();
             $("#divTotal").show();
-
+        }
+            
         var num = $('.lblTotal').text().replace(',', '');
         total = parseInt(num, 10);
     }
     fun1();
-    //-----初始化彈出視窗的內容-----
+    //-----初始化-----
 
     //-----日曆自訂格式-----
     $(".datepick").datepicker({
@@ -153,36 +157,55 @@
 
     //-----新增或修改進貨單到資料庫-----
     $(".btnSave").click(function () {
+        var pid = $('.txtPID').val();
+        if (pid == '儲存時產生' && !pidQueryStr) {
+            pid = 'create';
+        } else if (pid == pidQueryStr) {
+            pid = pid;
+        } else {
+            alert('票據編號發生異常');
+            return;
+        }
+
+        var date = $(".datepick").val()
+        if (!isValidDate(date)) {
+            alert('日期格式不正確或異常');
+            return;
+        }
+
+        var tableTr = $('#maintable tbody tr');
+        if ( tableTr.length == 0) {
+            alert('明細表中必須至少有一樣商品');
+            return;
+        }
+
+        
+
         //Create an Array to hold the Table values.
         var POdetails = new Array();
 
-        //Reference the Table.
-        var table = document.getElementById("maintable");
-
-        //Loop through Table Rows.
-        for (var i = 1; i < table.rows.length; i++) {
+        for (var i = 0; i < tableTr.length; i++) {
             //Reference the Table Row.
-            var row = table.rows[i];
+            var row = tableTr.eq(i);
 
             //Copy values from Table Cell to JSON object.
             var POdetail = {};
             
-            POdetail.ID = row.cells[0].innerHTML;
-            POdetail.QTY = row.cells[3].innerHTML;
-            POdetail.Amount = row.cells[4].innerHTML;
+            POdetail.ID = row.find('td').eq(0).html();
+            POdetail.QTY = row.find('td').eq(3).html();
+            POdetail.Amount = row.find('td').eq(4).html();
             POdetails.push(POdetail);
         }
 
         //Convert the JSON object to string and assign to Hidden Field.
-        var po = JSON.stringify(POdetails);
-        var dp = $(".datepick").val();
-        var pid = ($('.txtPID').val() == '儲存時產生')? 'create' : $('.txtPID').val();
+        var PODetailData = JSON.stringify(POdetails);
+
 
         $.ajax({
             url: "/API/PO_Handler.ashx",
             type: "POST",
             dataType: "json",
-            data: {"PO_Detail": po, "PID":pid, "ArrivalTime": dp}
+            data: {"PO_Detail": PODetailData, "PID":pid, "ArrivalTime": date}
         })
             .done(function (responseData) {
                 console.log(responseData);
@@ -259,4 +282,16 @@
     }
     //-----排序表格-----
 
+
+    //-----時間格式-----
+    function isValidDate(datetimeString) {
+        var reg = /^[1-2]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d|[0-9]):([0-5]\d|[0-9])$/;
+        if (!datetimeString.match(reg)) return false;  // Invalid format
+        var dateStr = datetimeString.slice(0, 10);
+        var d = new Date(dateStr);
+        var dNum = d.getTime();
+        if (!dNum && dNum !== 0) return false; // NaN value, Invalid date
+        return d.toISOString().slice(0, 10) === dateStr;
+    }
+    //-----時間格式-----
 });

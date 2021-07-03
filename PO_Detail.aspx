@@ -26,10 +26,11 @@
             <h2 style=" margin:20px 0px 3px;">進貨單明細表</h2>
         </div>
         <div style="display:inline-block;">
-            <button type="button" id="btnEdit" style="margin-bottom:3px;">編輯</button>
+            <button type="button" id="btnEdit">編輯</button>
         </div>
     </div>
     
+
     <%--進貨單明細表--%>
     <table class="table" id="maintable">
         <thead>
@@ -71,11 +72,14 @@
     </div>
 
 
-    <%--建立者修改者--%>
+    <%--建立者建立時間--%>
     <div id="divCreate" style="display:none;"  runat="server">
         <asp:Label ID="lblCreator" runat="server" Text="建立者" CssClass="lblCreator">
         </asp:Label><asp:Label ID="lblCreateDate" runat="server" Text="建立時間" CssClass="lblCreateDate"></asp:Label>
     </div>
+
+
+    <%--修改者修改時間--%>
     <div id="divModify" style="display:none;">
         <asp:Label ID="lblModifier" runat="server" Text="修改者" CssClass="lblModifier">
         </asp:Label><asp:Label ID="lblModifyDate" runat="server" Text="修改時間" CssClass="lblModifyDate"></asp:Label>
@@ -85,7 +89,7 @@
     <%--儲存取消--%>
     <div id="divSave" style="margin-top:30px">
         <button type="button" class="btnSave">儲存</button>
-        <asp:Button ID="btnCancel" runat="server" Text="取消" CssClass="btnCancel" OnClick="btnCancel_Click"/>
+        <asp:Button ID="btnCancel" runat="server" Text="取消" CssClass="btnCancel" OnClick="btnCancel_Click" OnClientClick="return confirm('確定返回總覽頁?')"/>
         <input type="hidden" name="maintableJSON"/>
     </div>
 
