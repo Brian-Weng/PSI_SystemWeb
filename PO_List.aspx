@@ -30,6 +30,9 @@
             </ItemTemplate>
         </asp:Repeater>
     </table>
+    <div>
+        <asp:Label ID="lblDelete" runat="server" Text="" Visible="false"></asp:Label>
+    </div>
     <div class="row">
         <div>
             <asp:Button ID="btnInsert" runat="server" Text="新增" CssClass="button button2" OnClick="btnInsert_Click"/>

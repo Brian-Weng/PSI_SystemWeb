@@ -120,7 +120,7 @@ namespace PIS_System.Managers
         public List<PO_Model> ReadPOs(out int totalSize, int currentPage = 1, int pageSize = 5)
         {
             string dbQuery =
-                $@"SELECT TOP {5} * FROM 
+                $@"SELECT TOP {pageSize} * FROM 
                    (
                       SELECT
                         ROW_NUMBER() OVER(ORDER BY PID DESC) AS RowNumber,
